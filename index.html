@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Wizard Challenge</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <style>
+    body {
+      font-size: larger;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px auto;
+      width: 40%;
+    }
+    span {
+      margin: 10px;
+    }
+  </style>
+  <body>
+    <div id="wizard">
+      <form @submit.prevent="getFormValues">
+        <span>
+          <label>Project Name:</label>
+          <input type='text' name='projectName'/>
+        </span>
+        <span>
+          <label>File Format:</label>
+          <select v-on:change='onChangeFile($event)'>
+            <option :value='null'></option>
+            <option v-for='fileOption in outputOptions'>{{fileOption}}</option>
+          </select>
+        </span>
+        <span>
+          <label>Display Width</label>
+          <input type="text" name='displayWidth'/>
+        </span>
+        <span>
+          <label>Display Height</label>
+          <input type="text" name='displayHeight'/>
+        </span>
+        <span>
+          <label>Color Options:</label>
+          <select v-on:change='onChangeColor($event)'>
+            <option :value='null'></option>
+            <option v-for='colorOption in colorOptions'>{{colorOption}}</option>
+          </select>
+        </span>
+        <span v-for='index in textFields' :key='index'>
+          <label>Text {{index}}</label>
+          <input type="text" v-on:blur='appendToArr($event)'/>
+        </span>
+        <input type='submit'/>
+      </form>
+    </div>
+    <script>
+      new Vue({
+        el: "#wizard",
+        data() {
+          return {
+            templateId: 0,
+            selectedFileOption: '',
+            selectedColorOption: '',
+            outputOptions: null,
+            colorOptions: null,
+            textFields: null,
+            userTextFields: []
+          }
+        },
+        methods: {
+          onChangeFile(e) {
+            selectedFileOption = e.target.options[e.target.options.selectedIndex].text;
+          },
+          onChangeColor(e) {
+            selectedColorOption = e.target.options[e.target.options.selectedIndex].text;
+          },
+          appendToArr(e) {
+            if (e.target.value !== '') {
+              this.userTextFields.push(e.target.value);
+            }
+          },
+          getFormValues (submitEvent) {
+            this.templateId++;
+            let obj = {
+              'projectName': submitEvent.target.elements.projectName.value,
+              'templateId': this.templateId,
+              'displayWidth': submitEvent.target.elements.displayWidth.value,
+              'displayHeight': submitEvent.target.elements.displayHeight.value,
+              'textFields': this.userTextFields,
+              'colors': selectedColorOption,
+              'output': selectedFileOption
+            };
+            console.log(obj);
+          }
+        },
+        mounted() {
+          axios.get('https://hoazygo0r9.execute-api.us-west-2.amazonaws.com/default/wizard-test')
+            .then((response) => {
+              this.outputOptions = response.data.outputOptions;
+              this.colorOptions = response.data.colorOptions;
+              this.textFields = response.data.numberOfTextFields;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        created() {
+          console.log("Ready!");
+        }
+      });
+    </script>
+  </body>
+</html>
