@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Wizard Challenge</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <style>
@@ -16,7 +18,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 20px auto;
+      margin: 40px auto;
       width: 40%;
     }
     span {
@@ -27,10 +29,10 @@
     <div id="wizard">
       <form @submit.prevent="getFormValues">
         <span>
-          <label>Project Name:</label>
-          <input type='text' name='projectName'/>
+          <label >Project Name:</label>
+          <input class="form-control" type='text' name='projectName'/>
         </span>
-        <span>
+        <span class='dropdown'>
           <label>File Format:</label>
           <select v-on:change='onChangeFile($event)'>
             <option :value='null'></option>
@@ -38,12 +40,12 @@
           </select>
         </span>
         <span>
-          <label>Display Width</label>
-          <input type="text" name='displayWidth'/>
+          <label >Display Width</label>
+          <input class="form-control" type="text" name='displayWidth'/>
         </span>
         <span>
           <label>Display Height</label>
-          <input type="text" name='displayHeight'/>
+          <input class="form-control" type="text" name='displayHeight'/>
         </span>
         <span>
           <label>Color Options:</label>
@@ -54,9 +56,10 @@
         </span>
         <span v-for='index in textFields' :key='index'>
           <label>Text {{index}}</label>
-          <input type="text" v-on:blur='appendToArr($event)'/>
+          <input class="form-control" type="text" v-on:blur='appendToArr($event)'/>
         </span>
-        <input type='submit'/>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <!-- <input type='submit'/> -->
       </form>
     </div>
     <script>
